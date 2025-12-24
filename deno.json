@@ -1,0 +1,66 @@
+{
+	"nodeModulesDir": "manual",
+	"tasks": {
+		"check": "deno fmt --check . && deno lint . && deno check",
+		"dev": "deno run -A --watch=static/,routes/ dev.ts",
+		"build": "deno run -A dev.ts build",
+		"start": "deno serve -A _fresh/server.js",
+		"update": "deno run -A -r jsr:@fresh/update ."
+	},
+	"lint": {
+		"rules": {
+			"tags": [
+				"fresh",
+				"recommended"
+			]
+		}
+	},
+	"fmt": {
+		"indentWidth": 4,
+		"useTabs": true
+	},
+	"exclude": [
+		"**/_fresh/*"
+	],
+	"imports": {
+		"@/": "./",
+		"@bronti/bcrypt": "jsr:@bronti/bcrypt@^1.0.3",
+		"@db/postgres": "jsr:@db/postgres@^0.19.5",
+		"@dudasaus/env-or-throw": "jsr:@dudasaus/env-or-throw@^1.0.1",
+		"@valibot/valibot": "jsr:@valibot/valibot@^1.2.0",
+		"fresh": "jsr:@fresh/core@^2.2.0",
+		"preact": "npm:preact@^10.27.2",
+		"@preact/signals": "npm:@preact/signals@^2.5.0",
+		"tailwindcss": "npm:tailwindcss@^4.1.10",
+		"@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^1.0.0",
+		"@tailwindcss/postcss": "npm:@tailwindcss/postcss@^4.1.10",
+		"postcss": "npm:postcss@^8.5.6"
+	},
+	"compilerOptions": {
+		"lib": [
+			"dom",
+			"dom.asynciterable",
+			"dom.iterable",
+			"deno.ns"
+		],
+		"jsx": "precompile",
+		"jsxImportSource": "preact",
+		"jsxPrecompileSkipElements": [
+			"a",
+			"img",
+			"source",
+			"body",
+			"html",
+			"head",
+			"title",
+			"meta",
+			"script",
+			"link",
+			"style",
+			"base",
+			"noscript",
+			"template"
+		]
+	},
+	"allowScripts": ["npm:@tailwindcss/oxide@4.1.13", "npm:esbuild@0.25.7"]
+}
