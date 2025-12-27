@@ -2,11 +2,16 @@
 import { tailwind } from "@fresh/plugin-tailwind";
 
 import { Builder } from "fresh/dev";
+import { initUserTable } from "./utils/user.ts";
+import { initClassroomTable } from "./utils/classroom.ts";
 
 const builder = new Builder();
 tailwind(builder);
 if (Deno.args.includes("build")) {
 	await builder.build();
+
+	await initUserTable();
+	await initClassroomTable();
 } else {
 	await builder.listen(() => import("./main.ts"));
 }
