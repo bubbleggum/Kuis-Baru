@@ -22,5 +22,18 @@ export function safeUser(user: User) {
 	}
 }
 
-export const CreateUserSchema = v.pick(UserSchema, ["password", "username"]);
+export const CreateUserSchema = v.object({
+	password: v.pipe(
+		v.string(),
+		v.minLength(8, "Minimum password length is 8 characters"),
+		v.maxLength(25, "Maximum password length is 25 characters"),
+	),
+	username: v.pipe(
+		v.string(),
+		v.regex(
+			/^[a-z0-9]{3,20}$/,
+			"Username can only have lowercase letters and number and have 3 to 20 character length",
+		),
+	),
+});
 export type CreateUser = v.InferOutput<typeof CreateUserSchema>;

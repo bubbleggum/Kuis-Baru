@@ -11,7 +11,7 @@ export async function initUserTable() {
     id bigint generated always as identity primary key,
     password text not null,
     username text not null
-	)`;
+	);`;
 	await sql.queryArray`
 	create unique index if not exists uniq_username on users (username) where deleted_at is null
 	`;
@@ -25,4 +25,14 @@ export async function createUser(
 		[hash(password), username],
 	);
 	return safeUser(rows[0]);
+}
+
+export async function fetchUser(id: bigint): Promise<SafeUser | null> {
+	const { rows } = await sql.queryObject<User>(
+		`select * from users where id = $1`,
+		[id],
+	);
+	const fetchedUser = rows.at(0);
+
+	return fetchedUser ? safeUser(fetchedUser) : null;
 }
