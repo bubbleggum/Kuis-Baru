@@ -1,5 +1,12 @@
-import { Classroom, CreateClassroom } from "../schemas/classroom.ts";
+import {
+	Classroom,
+	CreateClassroom,
+	MemberRole,
+	SafeClassroom,
+	safeClassroom,
+} from "../schemas/classroom.ts";
 import { sql } from "./core.ts";
+import { createMember } from "./member.ts";
 
 export async function initClassroomTable() {
 	await sql.queryArray`
@@ -15,25 +22,30 @@ export async function initClassroomTable() {
 
 export async function createClassroom(
 	{ homeroom_id, name }: CreateClassroom,
-): Promise<Classroom> {
+): Promise<SafeClassroom> {
 	const { rows } = await sql.queryObject<Classroom>(
 		`insert into classrooms (homeroom_id, name) values ($1, $2) returning *`,
 		[homeroom_id, name],
 	);
 	const newClassroom = rows[0];
 
-	await sql.queryObject(
-		`insert into members (classroom_id, member_id, role) values ($1, $2, "homeroom")`,
-		[newClassroom.id, newClassroom.homeroom_id],
+	await createMember(
+		newClassroom.id,
+		newClassroom.homeroom_id,
+		MemberRole.Homeroom,
 	);
 
-	return newClassroom;
+	return safeClassroom(newClassroom);
 }
 
-export async function fetchClassroom(id: bigint): Promise<Classroom | null> {
+export async function fetchClassroom(
+	id: bigint,
+): Promise<SafeClassroom | null> {
 	const { rows } = await sql.queryObject<Classroom>(
 		`select * from classrooms where id = $1`,
 		[id],
 	);
-	return rows.at(0) ?? null;
+	const classroom = rows[0];
+
+	return classroom && !classroom.deleted_at ? safeClassroom(classroom) : null;
 }

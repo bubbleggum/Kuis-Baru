@@ -11,10 +11,10 @@ export const UserSchema = v.object({
 });
 export type User = v.InferOutput<typeof UserSchema>;
 
-export const SafeUserSchema = v.omit(UserSchema, ["password"]);
+export const SafeUserSchema = v.omit(UserSchema, ["deleted_at", "password"]);
 export type SafeUser = v.InferOutput<typeof SafeUserSchema>;
 
-export function safeUser(user: User) {
+export function safeUser(user: User): SafeUser {
 	try {
 		return v.parse(SafeUserSchema, user);
 	} catch (error) {

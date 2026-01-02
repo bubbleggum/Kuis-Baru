@@ -1,4 +1,4 @@
-import { encode, JWTPayload } from "@gz/jwt";
+import { decode, encode, JWTPayload } from "@gz/jwt";
 import { envOrThrow } from "@dudasaus/env-or-throw";
 import { setCookie, STATUS_CODE } from "@std/http";
 
@@ -8,17 +8,25 @@ const TOKEN_EXPIRATION = {
 };
 
 async function createToken(userId: bigint, tokenType: TokenType) {
-	const expireIn = tokenType === TokenType.AccessToken
-		? TOKEN_EXPIRATION.AccessToken
-		: TOKEN_EXPIRATION.RefreshToken;
-	return await encode(
-		{
-			user_id: userId.toString(),
-			token_type: tokenType,
-			exp: expireIn,
-		} satisfies Token,
-		envOrThrow("JWT_SECRET"),
-	);
+	const expireIn =
+		(tokenType === TokenType.AccessToken
+			? TOKEN_EXPIRATION.AccessToken
+			: TOKEN_EXPIRATION.RefreshToken) + (Math.floor(Date.now() / 1_000));
+	return {
+		token: await encode(
+			{
+				user_id: userId.toString(),
+				token_type: tokenType,
+				exp: expireIn,
+			} satisfies Token,
+			envOrThrow("JWT_SECRET"),
+		),
+		expireIn,
+	};
+}
+
+export async function parseToken(token: string) {
+	return await decode<Token>(token, envOrThrow("JWT_SECRET"));
 }
 
 export async function createSession(userId: bigint) {
@@ -28,18 +36,19 @@ export async function createSession(userId: bigint) {
 	const headers = new Headers({
 		location: "/",
 	});
+
 	setCookie(headers, {
 		name: "access_token",
-		value: accessToken,
+		value: accessToken.token,
 		path: "/",
-		expires: TOKEN_EXPIRATION.AccessToken * 1_000,
+		expires: accessToken.expireIn * 1_000,
 		httpOnly: true,
 	});
 	setCookie(headers, {
 		name: "refresh_token",
-		value: refreshToken,
+		value: refreshToken.token,
 		path: "/refresh_token",
-		expires: TOKEN_EXPIRATION.RefreshToken * 1_000,
+		expires: refreshToken.expireIn * 1_000,
 		httpOnly: true,
 	});
 
@@ -49,7 +58,7 @@ export async function createSession(userId: bigint) {
 	});
 }
 
-enum TokenType {
+export enum TokenType {
 	AccessToken,
 	RefreshToken,
 }

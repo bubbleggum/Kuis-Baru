@@ -1,11 +1,12 @@
 import { createDefine } from "fresh";
 import { Client } from "@db/postgres";
 import { envOrThrow } from "@dudasaus/env-or-throw";
+import { SafeUser } from "../schemas/user.ts";
 
 // This specifies the type of "ctx.state" which is used to share
 // data among middlewares, layouts and routes.
 export interface State {
-	shared: string;
+	user: SafeUser | null;
 }
 
 export const define = createDefine<State>();

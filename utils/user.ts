@@ -34,5 +34,7 @@ export async function fetchUser(id: bigint): Promise<SafeUser | null> {
 	);
 	const fetchedUser = rows.at(0);
 
-	return fetchedUser ? safeUser(fetchedUser) : null;
+	return fetchedUser && !fetchedUser.deleted_at
+		? safeUser(fetchedUser)
+		: null;
 }

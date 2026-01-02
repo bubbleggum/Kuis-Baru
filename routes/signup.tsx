@@ -4,6 +4,8 @@ import { createUser } from "../utils/user.ts";
 import { createSession } from "../utils/session.ts";
 import { LoginForm } from "../islands/LoginForm.tsx";
 import { PostgresError } from "@db/postgres";
+import { v } from "../utils/valibot.ts";
+import { CreateUserSchema } from "../schemas/user.ts";
 
 export const handler = define.handlers({
 	GET(_ctx) {
@@ -12,18 +14,19 @@ export const handler = define.handlers({
 	async POST(ctx) {
 		const data = await ctx.req.formData();
 
-		const username = data.get("username") as string;
-		const password = data.get("password") as string;
+		const username = data.get("username");
+		const password = data.get("password");
 
 		try {
-			const newUser = await createUser({ password, username });
+			const data = v.parse(CreateUserSchema, { password, username });
+			const newUser = await createUser(data);
 			return await createSession(newUser.id);
 		} catch (error) {
 			if (
 				error instanceof PostgresError &&
 				error.fields.constraint === "uniq_username"
 			) {
-				return page({ username });
+				return page({ username: null });
 			} else {
 				throw error;
 			}
