@@ -21,7 +21,6 @@ export function safeClassroom(classroom: Classroom): SafeClassroom {
 }
 
 export const CreateClassroomSchema = v.pick(ClassroomSchema, [
-	"homeroom_id",
 	"name",
 ]);
 export type CreateClassroom = v.InferOutput<typeof CreateClassroomSchema>;

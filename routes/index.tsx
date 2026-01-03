@@ -1,5 +1,6 @@
 import { page } from "fresh";
 import { define } from "../utils/core.ts";
+import { CreateClassroomIsland } from "../islands/CreateClassroom.tsx";
 
 export const handler = define.handlers({
 	GET(ctx) {
@@ -50,26 +51,7 @@ export default define.page<typeof handler>(function (ctx) {
 						</svg>
 					</div>
 					<div class="flex gap-2">
-						<button
-							class="flex justify-center items-center bg-[#D5D5D5] size-10 rounded-lg"
-							type="button"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="20"
-								height="20"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="#2B2B2B"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								class="lucide lucide-plus-icon lucide-plus"
-							>
-								<path d="M5 12h14" />
-								<path d="M12 5v14" />
-							</svg>
-						</button>
+						<CreateClassroomIsland />
 						<button
 							class="flex justify-center items-center bg-[#D5D5D5] size-10 rounded-lg"
 							type="button"

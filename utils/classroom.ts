@@ -1,6 +1,5 @@
 import {
 	Classroom,
-	CreateClassroom,
 	MemberRole,
 	SafeClassroom,
 	safeClassroom,
@@ -21,7 +20,8 @@ export async function initClassroomTable() {
 }
 
 export async function createClassroom(
-	{ homeroom_id, name }: CreateClassroom,
+	name: string,
+	homeroom_id: bigint,
 ): Promise<SafeClassroom> {
 	const { rows } = await sql.queryObject<Classroom>(
 		`insert into classrooms (homeroom_id, name) values ($1, $2) returning *`,

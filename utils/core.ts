@@ -11,3 +11,10 @@ export interface State {
 
 export const define = createDefine<State>();
 export const sql = new Client(envOrThrow("DATABASE_URL"));
+
+export function stringifyJson(data: unknown) {
+	return JSON.stringify(
+		data,
+		(_key, value) => typeof value === "bigint" ? value.toString() : value,
+	);
+}
