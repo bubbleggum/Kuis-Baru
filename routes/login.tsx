@@ -1,11 +1,11 @@
 import { page } from "fresh";
 import { define } from "../utils/core.ts";
-import { createUser } from "../utils/user.ts";
+import { fetchHashedPassword } from "../utils/user.ts";
 import { createSession } from "../utils/session.ts";
 import { LoginForm } from "../islands/LoginForm.tsx";
-import { PostgresError } from "@db/postgres";
 import { v } from "../utils/valibot.ts";
 import { CreateUserSchema } from "../schemas/user.ts";
+import { verify } from "@bronti/bcrypt";
 
 export const handler = define.handlers({
 	GET(ctx) {
@@ -26,17 +26,18 @@ export const handler = define.handlers({
 
 			try {
 				const data = v.parse(CreateUserSchema, { password, username });
-				const newUser = await createUser(data);
-				return await createSession(newUser.id);
-			} catch (error) {
-				if (
-					error instanceof PostgresError &&
-					error.fields.constraint === "uniq_username"
-				) {
-					return page({ username: null });
-				} else {
-					throw error;
+				const credential = await fetchHashedPassword(data.username);
+
+				if (credential) {
+					const valid = verify(data.password, credential.password);
+
+					if (valid) {
+						return await createSession(credential.id);
+					}
 				}
+				return page({ username: data.username });
+			} catch (error) {
+				throw error;
 			}
 		}
 	},
@@ -49,7 +50,7 @@ export default define.page<typeof handler>(function (ctx) {
 		<div class="flex flex-col items-center justify-center h-dvh gap-5 bg-[#111111] font-outfit font-semibold">
 			<div class="flex flex-col items-center">
 				<p class="text-2xl text-white">Selamat Datang!</p>
-				<p class="text-[#9C9C9C]">Silahkan daftar untuk lanjut</p>
+				<p class="text-[#9C9C9C]">Silahkan login untuk lanjut</p>
 			</div>
 			<LoginForm currentUsername={username} />
 		</div>

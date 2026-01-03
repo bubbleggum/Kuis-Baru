@@ -27,6 +27,14 @@ export async function createUser(
 	return safeUser(rows[0]);
 }
 
+export async function fetchHashedPassword(username: string) {
+	const { rows } = await sql.queryObject<{ password: string; id: bigint }>(
+		`select password, id from users where deleted_at is null and username = $1`,
+		[username],
+	);
+	return rows.at(0);
+}
+
 export async function fetchUser(id: bigint): Promise<SafeUser | null> {
 	const { rows } = await sql.queryObject<User>(
 		`select * from users where id = $1`,

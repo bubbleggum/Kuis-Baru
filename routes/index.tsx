@@ -8,7 +8,7 @@ export const handler = define.handlers({
 		if (user) {
 			return page({ user });
 		} else {
-			return ctx.redirect("/signup");
+			return ctx.redirect("/login");
 		}
 	},
 });
