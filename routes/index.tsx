@@ -19,18 +19,18 @@ export default define.page<typeof handler>(function (ctx) {
 	return (
 		<div class="flex flex-col p-8 h-dvh gap-5 bg-[#111111] select-none font-outfit font-semibold relative">
 			<div class="flex justify-between">
-				<p class="text-white">Hai, {user.username}!</p>
-				<div class="size-8 rounded-full overflow-hidden">
+				<p class="text-white text-lg">Hai, {user.username}!</p>
+				<div class="size-10 rounded-full overflow-hidden">
 					{user.avatar_url && (
 						<img class="size-full" src={user.avatar_url} />
 					)}
 				</div>
 			</div>
 			<div class="flex flex-col grow">
-				<div class="flex justify-between">
-					<div class="flex items-center relative">
+				<div class="flex justify-between gap-3">
+					<div class="flex items-center grow relative">
 						<input
-							class="bg-[#1B1B1B] pl-11 pr-3 h-10 text-sm text-white placeholder:text-[#565656] rounded-lg outline-none"
+							class="bg-[#1B1B1B] w-full max-w-80 pl-11 pr-3 h-10 text-sm text-white placeholder:text-[#565656] rounded-lg outline-none"
 							placeholder="Cari Kelas..."
 						/>
 						<svg
