@@ -8,27 +8,35 @@ import { v } from "../utils/valibot.ts";
 import { CreateUserSchema } from "../schemas/user.ts";
 
 export const handler = define.handlers({
-	GET(_ctx) {
-		return page({ username: null });
+	GET(ctx) {
+		if (ctx.state.user) {
+			return ctx.redirect("/");
+		} else {
+			return page({ username: null });
+		}
 	},
 	async POST(ctx) {
-		const data = await ctx.req.formData();
+		if (ctx.state.user) {
+			return ctx.redirect("/");
+		} else {
+			const data = await ctx.req.formData();
 
-		const username = data.get("username");
-		const password = data.get("password");
+			const username = data.get("username");
+			const password = data.get("password");
 
-		try {
-			const data = v.parse(CreateUserSchema, { password, username });
-			const newUser = await createUser(data);
-			return await createSession(newUser.id);
-		} catch (error) {
-			if (
-				error instanceof PostgresError &&
-				error.fields.constraint === "uniq_username"
-			) {
-				return page({ username: null });
-			} else {
-				throw error;
+			try {
+				const data = v.parse(CreateUserSchema, { password, username });
+				const newUser = await createUser(data);
+				return await createSession(newUser.id);
+			} catch (error) {
+				if (
+					error instanceof PostgresError &&
+					error.fields.constraint === "uniq_username"
+				) {
+					return page({ username: null });
+				} else {
+					throw error;
+				}
 			}
 		}
 	},

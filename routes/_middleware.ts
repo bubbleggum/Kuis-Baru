@@ -6,7 +6,8 @@ import { fetchUser } from "../utils/user.ts";
 export const handler = define.middleware(async function (ctx) {
 	ctx.state.user = null;
 
-	const accessToken = getCookies(ctx.req.headers)["access_token"];
+	const cookies = getCookies(ctx.req.headers);
+	const accessToken = cookies["access_token"];
 
 	if (accessToken) {
 		const payload = await parseToken(accessToken);
