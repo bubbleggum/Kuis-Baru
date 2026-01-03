@@ -1,13 +1,17 @@
 import { page } from "fresh";
 import { define } from "../utils/core.ts";
 import { CreateClassroomIsland } from "../islands/CreateClassroom.tsx";
+import { fetchJoinedClassrooms } from "../utils/classroom.ts";
 
 export const handler = define.handlers({
-	GET(ctx) {
+	async GET(ctx) {
 		const { user } = ctx.state;
 
 		if (user) {
-			return page({ user });
+			return page({
+				classrooms: await fetchJoinedClassrooms(user.id),
+				user,
+			});
 		} else {
 			return ctx.redirect("/login");
 		}
@@ -15,7 +19,7 @@ export const handler = define.handlers({
 });
 
 export default define.page<typeof handler>(function (ctx) {
-	const { user } = ctx.data;
+	const { classrooms, user } = ctx.data;
 
 	return (
 		<div class="flex flex-col p-8 h-dvh gap-5 bg-[#111111] select-none font-outfit font-semibold relative">
@@ -27,7 +31,7 @@ export default define.page<typeof handler>(function (ctx) {
 					)}
 				</div>
 			</div>
-			<div class="flex flex-col grow">
+			<div class="flex flex-col gap-2 grow">
 				<div class="flex justify-between gap-3">
 					<div class="flex items-center grow relative">
 						<input
@@ -76,6 +80,11 @@ export default define.page<typeof handler>(function (ctx) {
 							</svg>
 						</button>
 					</div>
+				</div>
+				<div class="flex flex-col grow overflow-y-auto">
+					{classrooms.map((classroom) => (
+						<p key={classroom.id}>{classroom.name}</p>
+					))}
 				</div>
 			</div>
 		</div>

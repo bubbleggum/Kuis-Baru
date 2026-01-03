@@ -49,3 +49,13 @@ export async function fetchClassroom(
 
 	return classroom && !classroom.deleted_at ? safeClassroom(classroom) : null;
 }
+
+export async function fetchJoinedClassrooms(
+	userId: bigint,
+): Promise<SafeClassroom[]> {
+	const { rows } = await sql.queryObject<Classroom>(
+		`select * from classrooms where id in (select classroom_id from members where member_id = $1)`,
+		[userId],
+	);
+	return rows.map(safeClassroom);
+}
