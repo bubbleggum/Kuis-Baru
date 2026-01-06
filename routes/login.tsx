@@ -1,10 +1,10 @@
 import { page } from "fresh";
 import { define } from "../utils/core.ts";
-import { fetchHashedPassword } from "../utils/user.ts";
+import { fetchHashedPassword } from "../utils/user_new.ts";
 import { createSession } from "../utils/session.ts";
 import { LoginForm } from "../islands/LoginForm.tsx";
 import { v } from "../utils/valibot.ts";
-import { CreateUserSchema } from "../schemas/user.ts";
+import { CreateUserSchema } from "../schemas/user_new.ts";
 import { verify } from "@bronti/bcrypt";
 
 export const handler = define.handlers({

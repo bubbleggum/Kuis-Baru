@@ -1,9 +1,9 @@
 import { HttpError } from "fresh";
 import { define, stringifyJson } from "../../../utils/core.ts";
 import { STATUS_CODE } from "@std/http/status";
-import { CreateClassroomSchema } from "../../../schemas/classroom.ts";
+import { CreateClassroomSchema } from "../../../schemas/classroom_new.ts";
 import { v } from "../../../utils/valibot.ts";
-import { createClassroom } from "../../../utils/classroom.ts";
+import { createClassroom } from "../../../utils/classroom_new.ts";
 
 export type APICreateClassroomResult = Awaited<
 	ReturnType<typeof createClassroom>
@@ -21,10 +21,7 @@ export const handler = define.handlers({
 					CreateClassroomSchema,
 					await ctx.req.json(),
 				);
-				const newClassroom = await createClassroom(
-					payload.name,
-					user.id,
-				);
+				const newClassroom = await createClassroom(payload);
 
 				return Response.json(JSON.parse(stringifyJson(newClassroom)));
 			} catch (error) {

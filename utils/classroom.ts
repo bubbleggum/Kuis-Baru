@@ -22,7 +22,7 @@ export async function initClassroomTable() {
 export async function createClassroom(
 	name: string,
 	homeroom_id: bigint,
-): Promise<SafeClassroom> {
+): Promise<Classroom> {
 	const { rows } = await sql.queryObject<Classroom>(
 		`insert into classrooms (homeroom_id, name) values ($1, $2) returning *`,
 		[homeroom_id, name],
@@ -35,7 +35,7 @@ export async function createClassroom(
 		MemberRole.Homeroom,
 	);
 
-	return safeClassroom(newClassroom);
+	return newClassroom;
 }
 
 export async function fetchClassroom(
@@ -52,10 +52,10 @@ export async function fetchClassroom(
 
 export async function fetchJoinedClassrooms(
 	userId: bigint,
-): Promise<SafeClassroom[]> {
-	const { rows } = await sql.queryObject<Classroom>(
-		`select * from classrooms where id in (select classroom_id from members where member_id = $1)`,
+) {
+	const { rows } = await sql.queryObject<SafeClassroom>(
+		`select c.id, c.name, json_build_object('avatar_url', u.avatar_url, 'username', u.username) as homeroom from classrooms c join members m on m.classroom_id = c.id join users u on u.id = c.homeroom_id where m.member_id = $1`,
 		[userId],
 	);
-	return rows.map(safeClassroom);
+	return rows;
 }

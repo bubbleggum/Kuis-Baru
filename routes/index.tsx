@@ -1,15 +1,18 @@
 import { page } from "fresh";
 import { define } from "../utils/core.ts";
 import { CreateClassroomIsland } from "../islands/CreateClassroom.tsx";
-import { fetchJoinedClassrooms } from "../utils/classroom.ts";
+import { fetchJoinedClassrooms } from "../utils/classroom_new.ts";
+import { ClassroomItem } from "../components/ClassroomItem.tsx";
 
 export const handler = define.handlers({
 	async GET(ctx) {
 		const { user } = ctx.state;
 
 		if (user) {
+			const classrooms = await fetchJoinedClassrooms(user.id);
+
 			return page({
-				classrooms: await fetchJoinedClassrooms(user.id),
+				classrooms,
 				user,
 			});
 		} else {
@@ -22,7 +25,7 @@ export default define.page<typeof handler>(function (ctx) {
 	const { classrooms, user } = ctx.data;
 
 	return (
-		<div class="flex flex-col p-8 h-dvh gap-5 bg-[#111111] select-none font-outfit font-semibold relative">
+		<div class="flex flex-col p-8 h-dvh gap-5 bg-[#111111] select-none font-outfit font-semibold overflow-y-auto relative">
 			<div class="flex justify-between">
 				<p class="text-white text-lg">Hai, {user.username}!</p>
 				<div class="size-10 rounded-full overflow-hidden">
@@ -31,7 +34,7 @@ export default define.page<typeof handler>(function (ctx) {
 					)}
 				</div>
 			</div>
-			<div class="flex flex-col gap-2 grow">
+			<div class="flex flex-col gap-4 grow">
 				<div class="flex justify-between gap-3">
 					<div class="flex items-center grow relative">
 						<input
@@ -81,9 +84,9 @@ export default define.page<typeof handler>(function (ctx) {
 						</button>
 					</div>
 				</div>
-				<div class="flex flex-col grow overflow-y-auto">
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-y-auto">
 					{classrooms.map((classroom) => (
-						<p key={classroom.id}>{classroom.name}</p>
+						<ClassroomItem classroom={classroom} />
 					))}
 				</div>
 			</div>

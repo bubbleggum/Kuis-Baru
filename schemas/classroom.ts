@@ -1,4 +1,5 @@
 import { v } from "../utils/valibot.ts";
+import { UserSchema } from "./user.ts";
 
 export const ClassroomSchema = v.object({
 	created_at: v.date(),
@@ -9,7 +10,11 @@ export const ClassroomSchema = v.object({
 });
 export type Classroom = v.InferOutput<typeof ClassroomSchema>;
 
-export const SafeClassroomSchema = v.omit(ClassroomSchema, ["deleted_at"]);
+export const SafeClassroomSchema = v.object({
+	homeroom: v.pick(UserSchema, ["avatar_url", "username"]),
+	id: v.bigint(),
+	name: v.string(),
+});
 export type SafeClassroom = v.InferOutput<typeof SafeClassroomSchema>;
 
 export function safeClassroom(classroom: Classroom): SafeClassroom {
