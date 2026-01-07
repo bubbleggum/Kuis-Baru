@@ -34,3 +34,6 @@ export const InviteSchema = v.object({
 	code: v.string(),
 });
 export type Invite = v.InferOutput<typeof InviteSchema>;
+
+export const JoinClassroomSchema = v.pick(InviteSchema, ["code"]);
+export type JoinClassroom = v.InferOutput<typeof JoinClassroomSchema>;

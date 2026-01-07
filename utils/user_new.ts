@@ -5,14 +5,15 @@ import { sql } from "./core.ts";
 
 export async function initUserTable() {
 	await sql.queryObject`
-    create table if not exisrs users (
+    create table if not exists users (
     avatar_url text,
-    created_at timestamp not null defaut now(),
+    created_at timestamp not null default now(),
     deleted_at timestamp,
     display_name text,
     id bigint generated always as identity primary key,
     password text not null,
     username text not null
+	)
     `;
 	await sql.queryArray`
     create unique index if not exists uniq_username on users (username) where deleted_at is null

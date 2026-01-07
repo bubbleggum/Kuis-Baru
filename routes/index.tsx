@@ -3,6 +3,7 @@ import { define } from "../utils/core.ts";
 import { CreateClassroomIsland } from "../islands/CreateClassroom.tsx";
 import { fetchJoinedClassrooms } from "../utils/classroom_new.ts";
 import { ClassroomItem } from "../components/ClassroomItem.tsx";
+import { JoinClassroomIsland } from "../islands/JoinClassroom.tsx";
 
 export const handler = define.handlers({
 	async GET(ctx) {
@@ -59,29 +60,7 @@ export default define.page<typeof handler>(function (ctx) {
 					</div>
 					<div class="flex gap-2">
 						<CreateClassroomIsland />
-						<button
-							class="flex justify-center items-center bg-[#D5D5D5] size-10 rounded-lg"
-							type="button"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="20"
-								height="20"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="#2B2B2B"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								class="lucide lucide-mail-search-icon lucide-mail-search"
-							>
-								<path d="M22 12.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h7.5" />
-								<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-								<path d="M18 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-								<circle cx="18" cy="18" r="3" />
-								<path d="m22 22-1.5-1.5" />
-							</svg>
-						</button>
+						<JoinClassroomIsland />
 					</div>
 				</div>
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-y-auto">

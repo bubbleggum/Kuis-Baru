@@ -2,9 +2,9 @@
 import { tailwind } from "@fresh/plugin-tailwind";
 
 import { Builder } from "fresh/dev";
-import { initUserTable } from "./utils/user.ts";
+import { initUserTable } from "./utils/user_new.ts";
 import { initClassroomTable } from "./utils/classroom.ts";
-import { initMemberTable } from "./utils/member.ts";
+import { initMemberTable } from "./utils/member_new.ts";
 import { initInviteTable } from "./utils/invite.ts";
 
 const builder = new Builder();

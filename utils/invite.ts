@@ -10,7 +10,7 @@ export async function initInviteTable() {
 	await sql.queryObject`
     create table if not exists invites (
     classroom_id bigint references classrooms(id) unique,
-    code text unique not null
+    code text unique primary key
     );
     `;
 }
@@ -38,6 +38,14 @@ export async function createInvite(classroomId: bigint) {
 	);
 }
 
+export async function fetchClassroomByInvite(code: string) {
+	const { rows } = await sql.queryObject<{ classroom_id: bigint }>(
+		`select classroom_id from invites where code = $1`,
+		[code],
+	);
+	return rows.at(0)?.classroom_id ?? null;
+}
+
 export async function fetchInvite(classroomId: bigint) {
 	const { rows } = await sql.queryObject<Invite>(
 		`select code from invites where classroom_id = $1`,
@@ -49,7 +57,7 @@ export async function fetchInvite(classroomId: bigint) {
 Deno.test({
 	name: "upsert and fetch invite",
 	async fn() {
-		const classroomId = 5n;
+		const classroomId = 1n;
 
 		console.log("upserting invite...");
 		const newInvite = await createInvite(classroomId);

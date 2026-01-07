@@ -17,15 +17,19 @@ export async function initMemberTable() {
     deleted_at timestamp,
     joined_at timestamp not null default now(),
     member_id bigint references users(id),
-    role member_role not null
-    );
+    role member_role not null,
+    unique (classroom_id, member_id)
+    )
     `;
+	await sql.queryArray`
+    create unique index if not exists uniq_members on members (classroom_id, member_id)
+	`;
 }
 
 export async function createMember(data: CreateMember) {
 	const { rows } = await sql.queryObject<Member>(
-		`insert into members (classroom_id, member_id) values ($1, $2) returning *`,
-		[data.classroom_id, data.member_id],
+		`insert into members (classroom_id, member_id, role) values ($1, $2, $3) returning *`,
+		[data.classroom_id, data.member_id, data.role],
 	);
 	return rows.at(0)!;
 }

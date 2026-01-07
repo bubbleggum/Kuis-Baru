@@ -19,7 +19,7 @@ export const handler = define.handlers({
 			try {
 				const payload = v.parse(
 					CreateClassroomSchema,
-					await ctx.req.json(),
+					{ ...(await ctx.req.json()), homeroom_id: user.id },
 				);
 				const newClassroom = await createClassroom(payload);
 
