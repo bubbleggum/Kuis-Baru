@@ -4,7 +4,7 @@ export const CreateUserSchema = v.object({
 	password: v.pipe(
 		v.string(),
 		v.minLength(8, "Panjang karakter kata sandi minimal 8 karakter"),
-		v.maxLength(25, "Panjang karakter kata sandi maksimal 25 karakter"),
+		v.maxLength(40, "Panjang karakter kata sandi maksimal 40 karakter"),
 	),
 	username: v.pipe(
 		v.string(),
