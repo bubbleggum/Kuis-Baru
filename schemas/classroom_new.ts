@@ -28,3 +28,9 @@ export interface Member extends CreateMember {
 	deleted_at: Date | null;
 	joined_at: Date;
 }
+
+export const InviteSchema = v.object({
+	classroom_id: v.bigint(),
+	code: v.string(),
+});
+export type Invite = v.InferOutput<typeof InviteSchema>;

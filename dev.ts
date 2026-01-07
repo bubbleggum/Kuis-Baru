@@ -5,6 +5,7 @@ import { Builder } from "fresh/dev";
 import { initUserTable } from "./utils/user.ts";
 import { initClassroomTable } from "./utils/classroom.ts";
 import { initMemberTable } from "./utils/member.ts";
+import { initInviteTable } from "./utils/invite.ts";
 
 const builder = new Builder();
 tailwind(builder);
@@ -14,6 +15,7 @@ if (Deno.args.includes("build")) {
 	await initUserTable();
 	await initClassroomTable();
 	await initMemberTable();
+	await initInviteTable();
 } else {
 	await builder.listen(() => import("./main.ts"));
 }

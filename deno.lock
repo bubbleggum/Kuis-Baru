@@ -12,6 +12,7 @@
     "jsr:@fresh/core@^2.2.0": "2.2.0",
     "jsr:@fresh/plugin-tailwind@1": "1.0.0",
     "jsr:@gz/jwt@0.1": "0.1.0",
+    "jsr:@sitnik/nanoid@^5.1.5": "5.1.5",
     "jsr:@std/bytes@^1.0.5": "1.0.6",
     "jsr:@std/bytes@^1.0.6": "1.0.6",
     "jsr:@std/cli@^1.0.25": "1.0.25",
@@ -131,6 +132,9 @@
     },
     "@gz/jwt@0.1.0": {
       "integrity": "32b0235cebcb85d363459b20ccaab0d8424fab89883c9f65caa1e2ad37e78e8f"
+    },
+    "@sitnik/nanoid@5.1.5": {
+      "integrity": "55bd5f57087d67b1dcb7c1f4a07efdfe77a3ac57ca0af90f162c1f676ebf8f4b"
     },
     "@std/bytes@1.0.6": {
       "integrity": "f6ac6adbd8ccd99314045f5703e23af0a68d7f7e58364b47d2c7f408aeb5820a"
@@ -711,6 +715,7 @@
       "jsr:@fresh/core@^2.2.0",
       "jsr:@fresh/plugin-tailwind@1",
       "jsr:@gz/jwt@0.1",
+      "jsr:@sitnik/nanoid@^5.1.5",
       "jsr:@std/http@^1.0.23",
       "jsr:@valibot/valibot@^1.2.0",
       "npm:@preact/signals@^2.5.0",
