@@ -2,7 +2,10 @@ import { SafeClassroom } from "../schemas/classroom.ts";
 
 export function ClassroomItem({ classroom }: { classroom: SafeClassroom }) {
 	return (
-		<div class="flex flex-col bg-[#0A0A0A] gap-0.5 px-6 py-4 h-32 font-bold rounded-xl border border-transparent hover:border-white transition-all ease-in-out duration-150">
+		<a
+			class="flex flex-col bg-[#0A0A0A] gap-0.5 px-6 py-4 h-32 font-bold rounded-xl border border-transparent hover:border-white transition-all ease-in-out duration-150"
+			href={"/classrooms/" + classroom.id.toString()}
+		>
 			<p class="text-white text-xl">{classroom.name}</p>
 			<div class="flex items-center gap-1">
 				<div class="rounded-full size-5 overflow-hidden">
@@ -17,6 +20,6 @@ export function ClassroomItem({ classroom }: { classroom: SafeClassroom }) {
 					@{classroom.homeroom.username}
 				</p>
 			</div>
-		</div>
+		</a>
 	);
 }

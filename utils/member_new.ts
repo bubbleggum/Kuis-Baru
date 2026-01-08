@@ -33,3 +33,11 @@ export async function createMember(data: CreateMember) {
 	);
 	return rows.at(0)!;
 }
+
+export async function fetchMember(classroomId: bigint, memberId: bigint) {
+	const { rows } = await sql.queryObject<Member>(
+		`select *  from members where classroom_id = $1 and member_id = $2`,
+		[classroomId, memberId],
+	);
+	return rows.at(0) ?? null;
+}
