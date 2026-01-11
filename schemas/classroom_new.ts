@@ -1,4 +1,5 @@
 import { v } from "../utils/valibot.ts";
+import { User } from "./user_new.ts";
 
 export const CreateClassroomSchema = v.object({
 	homeroom_id: v.bigint(),
@@ -9,6 +10,9 @@ export type CreateClassroom = v.InferOutput<typeof CreateClassroomSchema>;
 export interface Classroom extends CreateClassroom {
 	created_at: Date;
 	id: bigint;
+}
+export interface ClassroomWithHomeroom extends Classroom {
+	homeroom: User;
 }
 
 export enum MemberRole {

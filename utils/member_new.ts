@@ -1,4 +1,5 @@
 import { CreateMember, Member } from "../schemas/classroom_new.ts";
+import { User } from "../schemas/user_new.ts";
 import { sql } from "./core.ts";
 
 export async function initMemberTable() {
@@ -40,4 +41,12 @@ export async function fetchMember(classroomId: bigint, memberId: bigint) {
 		[classroomId, memberId],
 	);
 	return rows.at(0) ?? null;
+}
+
+export async function fetchMembers(classroomId: bigint) {
+	const { rows } = await sql.queryObject<Member & { user: User }>(
+		`select m.classroom_id, m.member_id, m.role, json_build_object('avatar_url', u.avatar_url, 'id', u.id, 'username', u.username) as user from members m inner join users u on u.id = m.member_id where m.classroom_id = $1`,
+		[classroomId],
+	);
+	return rows;
 }

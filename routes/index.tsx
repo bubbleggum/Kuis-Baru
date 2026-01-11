@@ -26,7 +26,7 @@ export default define.page<typeof handler>(function (ctx) {
 	const { classrooms, user } = ctx.data;
 
 	return (
-		<div class="flex flex-col p-8 h-dvh gap-5 bg-[#111111] select-none font-outfit font-semibold overflow-y-auto relative">
+		<div class="flex flex-col p-8 h-dvh gap-5 bg-[#111111] select-none font-figtree font-semibold overflow-y-auto relative">
 			<div class="flex justify-between">
 				<p class="text-white text-lg">Hai, {user.username}!</p>
 				<div class="size-10 rounded-full overflow-hidden">

@@ -2,12 +2,12 @@ import { createDefine } from "fresh";
 import { Client } from "@db/postgres";
 import { envOrThrow } from "@dudasaus/env-or-throw";
 import { SafeUser } from "../schemas/user.ts";
-import { Classroom, Member } from "../schemas/classroom_new.ts";
+import { ClassroomWithHomeroom, Member } from "../schemas/classroom_new.ts";
 
 // This specifies the type of "ctx.state" which is used to share
 // data among middlewares, layouts and routes.
 export interface State {
-	classroom: (Classroom & { member: Member }) | null;
+	classroom: (ClassroomWithHomeroom & { member: Member }) | null;
 	user: SafeUser | null;
 }
 

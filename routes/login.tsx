@@ -47,7 +47,7 @@ export default define.page<typeof handler>(function (ctx) {
 	const { username } = ctx.data;
 
 	return (
-		<div class="flex flex-col items-center justify-center h-dvh gap-5 bg-[#111111] font-outfit font-semibold">
+		<div class="flex flex-col items-center justify-center h-dvh gap-5 bg-[#111111] font-figtree font-semibold">
 			<div class="flex flex-col items-center">
 				<p class="text-2xl text-white">Selamat Datang!</p>
 				<p class="text-[#9C9C9C]">Silahkan login untuk lanjut</p>
