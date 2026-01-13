@@ -26,7 +26,6 @@ export const handler = define.handlers({
 					JoinClassroomSchema,
 					await ctx.req.json(),
 				);
-				console.log("code: " + code);
 				const classroomId = await fetchClassroomByInvite(code);
 
 				if (!classroomId) {
@@ -37,7 +36,7 @@ export const handler = define.handlers({
 				} else {
 					await createMember({
 						classroom_id: classroomId,
-						member_id: user.id,
+						user_id: user.id,
 						role: MemberRole.Student,
 					});
 					return Response.json(

@@ -23,14 +23,14 @@ export enum MemberRole {
 
 export const CreateMemberSchema = v.object({
 	classroom_id: v.bigint(),
-	member_id: v.bigint(),
+	user_id: v.bigint(),
 	role: v.enum(MemberRole),
 });
 export type CreateMember = v.InferOutput<typeof CreateMemberSchema>;
 
 export interface Member extends CreateMember {
-	deleted_at: Date | null;
 	joined_at: Date;
+	user: User;
 }
 
 export const InviteSchema = v.object({

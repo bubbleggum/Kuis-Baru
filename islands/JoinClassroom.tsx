@@ -20,7 +20,7 @@ export function JoinClassroomIsland() {
 
 			if (response.ok) {
 				const data: APIJoinClassroomResult = await response.json();
-				globalThis.location.href = "/classrooms/" + data.classroom_id;
+				globalThis.location.href = "/c/" + data.classroom_id;
 			} else {
 				setJoining(false);
 			}

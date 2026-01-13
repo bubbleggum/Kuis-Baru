@@ -17,7 +17,6 @@ export async function subscribeEvents(userId: bigint) {
 			let sequences = 0;
 
 			function fireEvent(event: EventData) {
-				console.log(event);
 				controller.enqueue(
 					encoder.encode(
 						"event: " + event.name + "\ndata: " +

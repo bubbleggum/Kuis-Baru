@@ -28,7 +28,7 @@ export async function createClassroom(data: CreateClassroom) {
 
 	await createMember({
 		classroom_id: newClassroom.id,
-		member_id: data.homeroom_id,
+		user_id: data.homeroom_id,
 		role: MemberRole.Homeroom,
 	});
 
@@ -45,7 +45,7 @@ export async function fetchClassroom(id: bigint) {
 
 export async function fetchJoinedClassrooms(userId: bigint) {
 	const { rows } = await sql.queryObject<ClassroomWithHomeroom>(
-		`select c.created_at, c.homeroom_id, c.id, c.name, json_build_object('avatar_url', u.avatar_url, 'created_at', u.created_at, 'id', u.id, 'username', u.username) as homeroom from classrooms c join members m on m.classroom_id = c.id join users u on u.id = c.homeroom_id where m.member_id = $1 and c.deleted_at is null`,
+		`select c.created_at, c.homeroom_id, c.id, c.name, json_build_object('avatar_url', u.avatar_url, 'created_at', u.created_at, 'id', u.id, 'username', u.username) as homeroom from classrooms c join members m on m.classroom_id = c.id join users u on u.id = c.homeroom_id where m.user_id = $1 and c.deleted_at is null`,
 		[userId],
 	);
 	return rows;

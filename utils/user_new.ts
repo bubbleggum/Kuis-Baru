@@ -20,7 +20,7 @@ export async function initUserTable() {
 	`;
 }
 
-export async function createUser(data: CreateUser): Promise<User> {
+export async function createUser(data: CreateUser) {
 	const { rows } = await sql.queryObject<User>(
 		`insert into users (password, username) values ($1, $2) returning avatar_url, created_at, deleted_at, display_name, id, username`,
 		[hash(data.password), data.username],
