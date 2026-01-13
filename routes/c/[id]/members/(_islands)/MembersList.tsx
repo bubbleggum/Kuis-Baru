@@ -54,7 +54,6 @@ export function MembersList(
 						onInput={(input) =>
 							setUsername(input.currentTarget.value)}
 						onKeyDown={(key) => {
-							console.log(key);
 							if (key.code == "Enter") {
 								findMembers();
 							}
