@@ -31,25 +31,33 @@ export default define.page<typeof handler>(function (ctx) {
 	);
 
 	return (
-		<div class="flex flex-col px-4 pb-4 gap-2 text-white overflow-y-auto size-full relative">
-			<div class="bg-[#0A0A0A] px-4 pt-8 text-sm font-bold sticky top-0">
+		<div class="flex flex-col px-6 pb-4 gap-2 text-white overflow-y-auto size-full relative">
+			<div class="bg-[#0A0A0A] pt-4 font-bold sticky top-0">
 				<p>Wali Kelas</p>
 			</div>
 			{homerooms.map((member) => (
 				<MemberItem key={member.user_id} member={member} />
 			))}
-			<div class="bg-[#0A0A0A] px-4 pt-8 text-sm font-bold sticky top-0">
-				<p>Guru - {teachers.length}</p>
-			</div>
-			{teachers.map((member) => (
-				<MemberItem key={member.user_id} member={member} />
-			))}
-			<div class="bg-[#0A0A0A] px-4 pt-8 text-sm font-bold sticky top-0">
-				<p>Murid - {students.length}</p>
-			</div>
-			{students.map((member) => (
-				<MemberItem key={member.user_id} member={member} />
-			))}
+			{teachers.length > 0 && (
+				<>
+					<div class="bg-[#0A0A0A] pt-4 font-bold sticky top-0">
+						<p>Guru - {teachers.length}</p>
+					</div>
+					{teachers.map((member) => (
+						<MemberItem key={member.user_id} member={member} />
+					))}
+				</>
+			)}
+			{students.length > 0 && (
+				<>
+					<div class="bg-[#0A0A0A] pt-4 font-bold sticky top-0">
+						<p>Murid - {students.length}</p>
+					</div>
+					{students.map((member) => (
+						<MemberItem key={member.user_id} member={member} />
+					))}
+				</>
+			)}
 		</div>
 	);
 });

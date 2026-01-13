@@ -20,7 +20,7 @@ export function CreateClassroomIsland() {
 
 			if (response.ok) {
 				const data: APICreateClassroomResult = await response.json();
-				globalThis.location.href = "/classrooms/" + data.id;
+				globalThis.location.href = "/c/" + data.id;
 			} else {
 				setCreating(false);
 			}

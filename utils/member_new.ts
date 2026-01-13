@@ -15,6 +15,7 @@ export async function initMemberTable() {
     create table if not exists members (
     classroom_id bigint references classrooms(id),
     deleted_at timestamp,
+	id bigint generated always as identity primary key,
     joined_at timestamp not null default now(),
     user_id bigint references users(id),
     role member_role not null,

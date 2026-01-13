@@ -29,6 +29,7 @@ export const CreateMemberSchema = v.object({
 export type CreateMember = v.InferOutput<typeof CreateMemberSchema>;
 
 export interface Member extends CreateMember {
+	id: bigint;
 	joined_at: Date;
 	user: User;
 }
