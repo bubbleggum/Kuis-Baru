@@ -47,7 +47,7 @@ export default define.page(function (ctx) {
 						<p>Anggota</p>
 					</a>
 				</div>
-				<div class="flex flex-col justify-center items-center grow bg-[#0A0A0A] rounded-md">
+				<div class="grow overflow-y-auto bg-[#0A0A0A] rounded-md">
 					<ctx.Component />
 				</div>
 			</div>
