@@ -50,3 +50,20 @@ export async function fetchMembers(classroomId: bigint) {
 	);
 	return rows;
 }
+
+export async function searchMembers(classroomId: bigint, username: string) {
+	const { rows } = await sql.queryObject<Member>(
+		`select m.classroom_id, m.user_id, m.role, m.joined_at, json_build_object('avatar_url', u.avatar_url, 'created_at', u.created_at, 'display_name', u.display_name, 'id', u.id, 'username', u.username) as user from members m join users u on u.id = m.user_id where m.classroom_id = $1 and m.user_id in (select id from users where username ilike $2) order by role asc`,
+		[classroomId, username + "%"],
+	);
+	return rows;
+}
+
+Deno.test({
+	name: "search members",
+	async fn() {
+		const members = await searchMembers(1n, "B");
+		console.log(members);
+		await sql.end();
+	},
+});
