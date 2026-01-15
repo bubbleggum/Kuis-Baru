@@ -63,18 +63,19 @@ export function MembersList(
 
 	return (
 		<div class="flex flex-col px-6 grow">
-			<div class="flex items-center justify-between bg-[#0A0A0A] gap-4 pt-4">
-				<div class="flex items-center grow relative">
+			<div class="flex items-center justify-between bg-[#0A0A0A] gap-4 pt-6">
+				<form
+					class="flex items-center grow relative"
+					onSubmit={(event) => {
+						event.preventDefault();
+						findMembers();
+					}}
+				>
 					<input
 						class="bg-[#1B1B1B] w-full max-w-80 pl-11 pr-3 h-10 text-sm text-white placeholder:text-[#565656] font-bold rounded-lg outline-none"
 						placeholder="Cari Anggota..."
 						onInput={(input) =>
 							setUsername(input.currentTarget.value)}
-						onKeyDown={(key) => {
-							if (key.code == "Enter") {
-								findMembers();
-							}
-						}}
 						value={username}
 					/>
 					{!fetching
@@ -111,7 +112,7 @@ export function MembersList(
 								<path d="M21 12a9 9 0 1 1-6.219-8.56" />
 							</svg>
 						)}
-				</div>
+				</form>
 				<div class="flex gap-2">
 					{inviteCode && (
 						<button
@@ -169,7 +170,7 @@ export function MembersList(
 					)}
 				</div>
 			</div>
-			<div class="flex flex-col pb-4 gap-2 text-white overflow-y-auto size-full relative">
+			<div class="flex flex-col pb-6 gap-2 text-white overflow-y-auto size-full relative">
 				{homerooms.length > 0 && (
 					<>
 						<div class="bg-[#0A0A0A] pt-4 font-bold sticky top-0">
