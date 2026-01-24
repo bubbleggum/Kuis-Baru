@@ -4,6 +4,10 @@ import { STATUS_CODE } from "@std/http/status";
 import { MemberRole } from "../../../../schemas/classroom_new.ts";
 import { createInvite, fetchInvite } from "../../../../utils/invite.ts";
 
+export interface APIInviteResponse {
+	invite_code: string;
+}
+
 export const handler = define.handlers({
 	async GET(ctx) {
 		const classroom = ctx.state.classroom!;
@@ -11,7 +15,9 @@ export const handler = define.handlers({
 		if (classroom.member.role === MemberRole.Homeroom) {
 			const inviteCode = await fetchInvite(classroom.id) ??
 				await createInvite(classroom.id);
-			return Response.json({ invite_code: inviteCode });
+			return Response.json(
+				{ invite_code: inviteCode } satisfies APIInviteResponse,
+			);
 		} else {
 			throw new HttpError(STATUS_CODE.Forbidden);
 		}
@@ -21,7 +27,9 @@ export const handler = define.handlers({
 
 		if (classroom.member.role === MemberRole.Homeroom) {
 			const inviteCode = await createInvite(classroom.id);
-			return Response.json({ invite_code: inviteCode });
+			return Response.json(
+				{ invite_code: inviteCode } satisfies APIInviteResponse,
+			);
 		} else {
 			throw new HttpError(STATUS_CODE.Forbidden);
 		}

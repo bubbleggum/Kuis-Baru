@@ -1,8 +1,9 @@
-import { sql } from "./core.ts";
+import { pool } from "./core.ts";
 import { CreateUser, SafeUser, safeUser, User } from "../schemas/user.ts";
 import { hash } from "@bronti/bcrypt";
 
 export async function initUserTable() {
+	using sql = await pool.connect();
 	await sql.queryArray`create table if not exists users (
 	avatar_url text,
     created_at timestamp not null default now(),
@@ -20,6 +21,7 @@ export async function initUserTable() {
 export async function createUser(
 	{ password, username }: CreateUser,
 ): Promise<SafeUser> {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<User>(
 		`insert into users (password, username) values ($1, $2) returning *`,
 		[hash(password), username],
@@ -28,6 +30,7 @@ export async function createUser(
 }
 
 export async function fetchHashedPassword(username: string) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<{ password: string; id: bigint }>(
 		`select password, id from users where deleted_at is null and username = $1`,
 		[username],
@@ -36,6 +39,7 @@ export async function fetchHashedPassword(username: string) {
 }
 
 export async function fetchUser(id: bigint): Promise<SafeUser | null> {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<User>(
 		`select * from users where id = $1`,
 		[id],

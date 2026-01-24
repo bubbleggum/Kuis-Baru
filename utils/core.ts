@@ -1,5 +1,5 @@
 import { createDefine } from "fresh";
-import { Client } from "@db/postgres";
+import { Pool } from "@db/postgres";
 import { envOrThrow } from "@dudasaus/env-or-throw";
 import { SafeUser } from "../schemas/user.ts";
 import { ClassroomWithHomeroom, Member } from "../schemas/classroom_new.ts";
@@ -12,7 +12,7 @@ export interface State {
 }
 
 export const define = createDefine<State>();
-export const sql = new Client(envOrThrow("DATABASE_URL"));
+export const pool = new Pool(envOrThrow("DATABASE_URL"), 100);
 
 export function stringifyJson(data: unknown) {
 	return JSON.stringify(

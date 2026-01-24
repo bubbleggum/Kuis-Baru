@@ -4,9 +4,10 @@ import {
 	SafeMember,
 	safeMember,
 } from "../schemas/classroom.ts";
-import { sql } from "./core.ts";
+import { pool } from "./core.ts";
 
 export async function initMemberTable() {
+	using sql = await pool.connect();
 	await sql.queryObject`
     do $$
     begin
@@ -32,6 +33,7 @@ export async function createMember(
 	memberId: bigint,
 	role: MemberRole = MemberRole.Student,
 ) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Member>(
 		`insert into members (classroom_id, member_id, role) values ($1, $2, $3) returning *`,
 		[classroomId, memberId, role],
@@ -43,6 +45,7 @@ export async function fetchMember(
 	classroomId: bigint,
 	memberId: bigint,
 ): Promise<SafeMember | null> {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Member>(
 		`select * from members where classroom_id = $1 and member_id = $2`,
 		[classroomId, memberId],

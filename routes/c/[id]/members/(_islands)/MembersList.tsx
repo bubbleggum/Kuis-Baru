@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import { Member, MemberRole } from "../../../../../schemas/classroom_new.ts";
 import { MemberItem } from "../../../../../components/MemberItem.tsx";
 import { APISearchMembersResult } from "../../../../api/classrooms/[classroomId]/members/index.ts";
+import { InviteIsland } from "./InviteIsland.tsx";
 
 export function MembersList(
 	{ classroomId, initialMembers, inviteCode }: {
@@ -45,13 +46,6 @@ export function MembersList(
 		}
 	}
 
-	async function copyInvite() {
-		if (inviteCode) {
-			await navigator.clipboard.writeText(inviteCode);
-			setCopied(true);
-		}
-	}
-
 	useEffect(() => {
 		const timeout = setTimeout(() => {
 			if (copied) {
@@ -63,7 +57,39 @@ export function MembersList(
 
 	return (
 		<div class="flex flex-col px-6 grow">
-			<div class="flex items-center justify-between bg-[#0A0A0A] gap-4 pt-6">
+			<div class="flex flex-col pb-6 gap-2 text-white overflow-y-auto size-full order-last">
+				{homerooms.length > 0 && (
+					<>
+						<div class="bg-[#0A0A0A] pt-4 font-bold">
+							<p>Wali Kelas</p>
+						</div>
+						{homerooms.map((member) => (
+							<MemberItem key={member.user_id} member={member} />
+						))}
+					</>
+				)}
+				{teachers.length > 0 && (
+					<>
+						<div class="bg-[#0A0A0A] pt-4 font-bold">
+							<p>Guru - {teachers.length}</p>
+						</div>
+						{teachers.map((member) => (
+							<MemberItem key={member.user_id} member={member} />
+						))}
+					</>
+				)}
+				{students.length > 0 && (
+					<>
+						<div class="bg-[#0A0A0A] pt-4 font-bold">
+							<p>Murid - {students.length}</p>
+						</div>
+						{students.map((member) => (
+							<MemberItem key={member.user_id} member={member} />
+						))}
+					</>
+				)}
+			</div>
+			<div class="flex items-center justify-between bg-[#0A0A0A] gap-4 pt-6 relative order-first">
 				<form
 					class="flex items-center grow relative"
 					onSubmit={(event) => {
@@ -114,93 +140,11 @@ export function MembersList(
 						)}
 				</form>
 				<div class="flex gap-2">
-					{inviteCode && (
-						<button
-							class="flex justify-center items-center min-w-10 md:min-w-auto md:px-3 h-10 bg-white data-[copied=true]:bg-green-500 gap-2 rounded-lg text-black data-[copied=true]:text-white font-bold"
-							type="button"
-							disabled={copied}
-							onClick={copyInvite}
-							data-copied={copied}
-						>
-							{!copied
-								? (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="20"
-										height="20"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="3"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										class="lucide lucide-copy-icon lucide-copy"
-									>
-										<rect
-											width="14"
-											height="14"
-											x="8"
-											y="8"
-											rx="2"
-											ry="2"
-										/>
-										<path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-									</svg>
-								)
-								: (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="20"
-										height="20"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="3"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										class="lucide lucide-check-icon lucide-check"
-									>
-										<path d="M20 6 9 17l-5-5" />
-									</svg>
-								)}
-							<p class="hidden md:flex">
-								{!copied ? "Salin Kode" : "Disalin"}
-							</p>
-						</button>
-					)}
+					<InviteIsland
+						classroomId={classroomId}
+						inviteCode={inviteCode}
+					/>
 				</div>
-			</div>
-			<div class="flex flex-col pb-6 gap-2 text-white overflow-y-auto size-full relative">
-				{homerooms.length > 0 && (
-					<>
-						<div class="bg-[#0A0A0A] pt-4 font-bold sticky top-0">
-							<p>Wali Kelas</p>
-						</div>
-						{homerooms.map((member) => (
-							<MemberItem key={member.user_id} member={member} />
-						))}
-					</>
-				)}
-				{teachers.length > 0 && (
-					<>
-						<div class="bg-[#0A0A0A] pt-4 font-bold sticky top-0">
-							<p>Guru - {teachers.length}</p>
-						</div>
-						{teachers.map((member) => (
-							<MemberItem key={member.user_id} member={member} />
-						))}
-					</>
-				)}
-				{students.length > 0 && (
-					<>
-						<div class="bg-[#0A0A0A] pt-4 font-bold sticky top-0">
-							<p>Murid - {students.length}</p>
-						</div>
-						{students.map((member) => (
-							<MemberItem key={member.user_id} member={member} />
-						))}
-					</>
-				)}
 			</div>
 		</div>
 	);

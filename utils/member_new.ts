@@ -1,7 +1,8 @@
 import { CreateMember, Member } from "../schemas/classroom_new.ts";
-import { sql } from "./core.ts";
+import { pool } from "./core.ts";
 
 export async function initMemberTable() {
+	using sql = await pool.connect();
 	await sql.queryObject`
     do $$
     begin
@@ -28,6 +29,7 @@ export async function initMemberTable() {
 }
 
 export async function createMember(data: CreateMember) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Member>(
 		`insert into members (classroom_id, user_id, role) values ($1, $2, $3) returning *`,
 		[data.classroom_id, data.user_id, data.role],
@@ -36,6 +38,7 @@ export async function createMember(data: CreateMember) {
 }
 
 export async function fetchMember(classroomId: bigint, userId: bigint) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Member>(
 		`select m.classroom_id, m.user_id, m.role, m.joined_at, json_build_object('avatar_url', u.avatar_url, 'created_at', u.created_at, 'display_name', u.display_name, 'id', u.id, 'username', u.username) as user from members m join users u on u.id = m.user_id where classroom_id = $1 and user_id = $2`,
 		[classroomId, userId],
@@ -44,6 +47,7 @@ export async function fetchMember(classroomId: bigint, userId: bigint) {
 }
 
 export async function fetchMembers(classroomId: bigint) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Member>(
 		`select m.classroom_id, m.user_id, m.role, m.joined_at, json_build_object('avatar_url', u.avatar_url, 'created_at', u.created_at, 'display_name', u.display_name, 'id', u.id, 'username', u.username) as user from members m join users u on u.id = m.user_id where m.classroom_id = $1 order by role asc`,
 		[classroomId],
@@ -52,6 +56,7 @@ export async function fetchMembers(classroomId: bigint) {
 }
 
 export async function searchMembers(classroomId: bigint, username: string) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Member>(
 		`select m.classroom_id, m.user_id, m.role, m.joined_at, json_build_object('avatar_url', u.avatar_url, 'created_at', u.created_at, 'display_name', u.display_name, 'id', u.id, 'username', u.username) as user from members m join users u on u.id = m.user_id where m.classroom_id = $1 and m.user_id in (select id from users where username ilike $2) order by role asc`,
 		[classroomId, username + "%"],
@@ -64,6 +69,5 @@ Deno.test({
 	async fn() {
 		const members = await searchMembers(1n, "B");
 		console.log(members);
-		await sql.end();
 	},
 });

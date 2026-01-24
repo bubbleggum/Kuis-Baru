@@ -4,10 +4,11 @@ import {
 	CreateClassroom,
 	MemberRole,
 } from "../schemas/classroom_new.ts";
-import { sql } from "./core.ts";
+import { pool } from "./core.ts";
 import { createMember } from "./member_new.ts";
 
 export async function initClassroomTable() {
+	using sql = await pool.connect();
 	await sql.queryArray`
     create table if not exists classrooms (
     created_at timestamp not null default now(),
@@ -20,6 +21,7 @@ export async function initClassroomTable() {
 }
 
 export async function createClassroom(data: CreateClassroom) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Classroom>(
 		`insert into classrooms (homeroom_id, name) values ($1, $2) returning *`,
 		[data.homeroom_id, data.name],
@@ -36,6 +38,7 @@ export async function createClassroom(data: CreateClassroom) {
 }
 
 export async function fetchClassroom(id: bigint) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<ClassroomWithHomeroom>(
 		`select c.created_at, c.homeroom_id, c.id, c.name, json_build_object('avatar_url', u.avatar_url, 'created_at', u.created_at, 'id', u.id, 'username', u.username) as homeroom from classrooms c join users u on u.id = c.homeroom_id where c.id = $1`,
 		[id],
@@ -44,6 +47,7 @@ export async function fetchClassroom(id: bigint) {
 }
 
 export async function fetchJoinedClassrooms(userId: bigint) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<ClassroomWithHomeroom>(
 		`select c.created_at, c.homeroom_id, c.id, c.name, json_build_object('avatar_url', u.avatar_url, 'created_at', u.created_at, 'id', u.id, 'username', u.username) as homeroom from classrooms c join members m on m.classroom_id = c.id join users u on u.id = c.homeroom_id where m.user_id = $1 and c.deleted_at is null`,
 		[userId],

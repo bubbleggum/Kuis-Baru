@@ -4,10 +4,11 @@ import {
 	SafeClassroom,
 	safeClassroom,
 } from "../schemas/classroom.ts";
-import { sql } from "./core.ts";
+import { pool } from "./core.ts";
 import { createMember } from "./member.ts";
 
 export async function initClassroomTable() {
+	using sql = await pool.connect();
 	await sql.queryArray`
     create table if not exists classrooms (
     created_at timestamp not null default now(),
@@ -23,6 +24,7 @@ export async function createClassroom(
 	name: string,
 	homeroom_id: bigint,
 ): Promise<Classroom> {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Classroom>(
 		`insert into classrooms (homeroom_id, name) values ($1, $2) returning *`,
 		[homeroom_id, name],
@@ -41,6 +43,7 @@ export async function createClassroom(
 export async function fetchClassroom(
 	id: bigint,
 ): Promise<SafeClassroom | null> {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Classroom>(
 		`select * from classrooms where id = $1`,
 		[id],
@@ -53,6 +56,7 @@ export async function fetchClassroom(
 export async function fetchJoinedClassrooms(
 	userId: bigint,
 ) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<SafeClassroom>(
 		`select c.id, c.name, json_build_object('avatar_url', u.avatar_url, 'username', u.username) as homeroom from classrooms c join members m on m.classroom_id = c.id join users u on u.id = c.homeroom_id where m.member_id = $1`,
 		[userId],

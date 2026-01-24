@@ -1,5 +1,5 @@
 import { Invite } from "../schemas/classroom_new.ts";
-import { sql } from "./core.ts";
+import { pool } from "./core.ts";
 import { customAlphabet } from "@sitnik/nanoid";
 
 const inviteFn = customAlphabet(
@@ -7,6 +7,7 @@ const inviteFn = customAlphabet(
 );
 
 export async function initInviteTable() {
+	using sql = await pool.connect();
 	await sql.queryObject`
     create table if not exists invites (
     classroom_id bigint references classrooms(id) unique,
@@ -19,6 +20,8 @@ export async function createInvite(classroomId: bigint) {
 	let codeSize = 8;
 	let success = false;
 	let retries = 0;
+
+	using sql = await pool.connect();
 
 	do {
 		try {
@@ -39,6 +42,7 @@ export async function createInvite(classroomId: bigint) {
 }
 
 export async function fetchClassroomByInvite(code: string) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<{ classroom_id: bigint }>(
 		`select classroom_id from invites where code = $1`,
 		[code],
@@ -47,6 +51,7 @@ export async function fetchClassroomByInvite(code: string) {
 }
 
 export async function fetchInvite(classroomId: bigint) {
+	using sql = await pool.connect();
 	const { rows } = await sql.queryObject<Invite>(
 		`select code from invites where classroom_id = $1`,
 		[classroomId],
@@ -65,7 +70,5 @@ Deno.test({
 
 		console.log("fetching invite...");
 		console.log(await fetchInvite(classroomId));
-
-		await sql.end();
 	},
 });
