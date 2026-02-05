@@ -25,16 +25,20 @@ export const handler = define.handlers({
 			const password = data.get("password");
 
 			try {
+				console.log(username, password);
 				const data = v.parse(CreateUserSchema, { password, username });
 				const credential = await fetchHashedPassword(data.username);
+				console.log(credential);
 
 				if (credential) {
 					const valid = verify(data.password, credential.password);
+					console.log(valid);
 
 					if (valid) {
 						return await createSession(credential.id);
 					}
 				}
+
 				return page({ username: data.username });
 			} catch (error) {
 				throw error;

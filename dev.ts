@@ -3,9 +3,10 @@ import { tailwind } from "@fresh/plugin-tailwind";
 
 import { Builder } from "fresh/dev";
 import { initUserTable } from "./utils/user_new.ts";
-import { initClassroomTable } from "./utils/classroom.ts";
+import { initClassroomTable } from "./utils/classroom_new.ts";
 import { initMemberTable } from "./utils/member_new.ts";
 import { initInviteTable } from "./utils/invite.ts";
+import { initExamTable } from "./utils/exam.ts";
 
 const builder = new Builder();
 tailwind(builder);
@@ -16,6 +17,7 @@ if (Deno.args.includes("build")) {
 	await initClassroomTable();
 	await initMemberTable();
 	await initInviteTable();
+	await initExamTable();
 } else {
 	await builder.listen(() => import("./main.ts"));
 }

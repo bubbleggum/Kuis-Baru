@@ -1,18 +1,18 @@
 import { createDefine } from "fresh";
-import { Pool } from "@db/postgres";
+import { neon } from "@neon/serverless";
 import { envOrThrow } from "@dudasaus/env-or-throw";
-import { SafeUser } from "../schemas/user.ts";
 import { ClassroomWithHomeroom, Member } from "../schemas/classroom_new.ts";
+import { User } from "../schemas/user_new.ts";
 
 // This specifies the type of "ctx.state" which is used to share
 // data among middlewares, layouts and routes.
 export interface State {
 	classroom: (ClassroomWithHomeroom & { member: Member }) | null;
-	user: SafeUser | null;
+	user: User | null;
 }
 
 export const define = createDefine<State>();
-export const pool = new Pool(envOrThrow("DATABASE_URL"), 100);
+export const sql = neon(envOrThrow("DATABASE_URL"));
 
 export function stringifyJson(data: unknown) {
 	return JSON.stringify(

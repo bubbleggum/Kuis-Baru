@@ -1,6 +1,6 @@
 import { v } from "../utils/valibot.ts";
 
-const QuestionSchema = v.object({
+export const QuestionSchema = v.object({
 	choices: v.pipe(v.array(v.string()), v.maxLength(5)),
 	correct_choice_id: v.bigint(),
 	exam_id: v.bigint(),
@@ -26,7 +26,8 @@ export const ExamSchema = v.object({
 	title: v.string(),
 	type: v.enum(ExamType),
 });
-export type Exam = v.InferOutput<typeof ExamSchema>;
+
+export type Exam<T extends ExamType> = v.InferOutput<typeof ExamSchema>;
 
 export const ExamSubmissionSchema = v.object({
 	classroom_id: v.bigint(),

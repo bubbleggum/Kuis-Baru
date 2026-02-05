@@ -11,7 +11,7 @@ export function LoginForm(
 			<div class="flex flex-col gap-1">
 				<label for="username">Username</label>
 				<input
-					class="bg-[#1F1F1F] px-2.5 py-1.5 placeholder:text-[#818181] rounded-xl border border-[#515151] focus:border-white outline-none"
+					class="bg-[#1F1F1F] w-full px-2.5 py-1.5 placeholder:text-[#818181] rounded-xl border border-[#515151] focus:border-white outline-none"
 					name="username"
 					id="username"
 					placeholder="Enter your username"

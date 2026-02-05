@@ -1,3 +1,4 @@
+import { MemberRole } from "../../../schemas/classroom_new.ts";
 import { define } from "../../../utils/core.ts";
 
 export default define.page(function (ctx) {
@@ -46,36 +47,38 @@ export default define.page(function (ctx) {
 						</svg>
 						<p>Anggota</p>
 					</a>
-					<a
-						class="flex items-center px-4 h-10 gap-3 md:w-64 aria-[current]:bg-[#0A0A0A] text-[#9C9C9C] aria-[current]:text-white rounded-md"
-						href={route("/drafts")}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="#ffffff"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-book-dashed-icon lucide-book-dashed"
+					{classroom.member.role !== MemberRole.Student && (
+						<a
+							class="flex items-center px-4 h-10 gap-3 md:w-64 aria-[current]:bg-[#0A0A0A] text-[#9C9C9C] aria-[current]:text-white rounded-md"
+							href={route("/archives")}
 						>
-							<path d="M12 17h1.5" />
-							<path d="M12 22h1.5" />
-							<path d="M12 2h1.5" />
-							<path d="M17.5 22H19a1 1 0 0 0 1-1" />
-							<path d="M17.5 2H19a1 1 0 0 1 1 1v1.5" />
-							<path d="M20 14v3h-2.5" />
-							<path d="M20 8.5V10" />
-							<path d="M4 10V8.5" />
-							<path d="M4 19.5V14" />
-							<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H8" />
-							<path d="M8 22H6.5a1 1 0 0 1 0-5H8" />
-						</svg>
-						<p>Draf</p>
-					</a>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#ffffff"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="lucide lucide-book-dashed-icon lucide-book-dashed"
+							>
+								<path d="M12 17h1.5" />
+								<path d="M12 22h1.5" />
+								<path d="M12 2h1.5" />
+								<path d="M17.5 22H19a1 1 0 0 0 1-1" />
+								<path d="M17.5 2H19a1 1 0 0 1 1 1v1.5" />
+								<path d="M20 14v3h-2.5" />
+								<path d="M20 8.5V10" />
+								<path d="M4 10V8.5" />
+								<path d="M4 19.5V14" />
+								<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H8" />
+								<path d="M8 22H6.5a1 1 0 0 1 0-5H8" />
+							</svg>
+							<p>Arsip</p>
+						</a>
+					)}
 					<a
 						class="flex items-center px-4 h-10 gap-3 md:w-64 aria-[current]:bg-[#0A0A0A] text-red-500 rounded-md"
 						href={route("/bans")}

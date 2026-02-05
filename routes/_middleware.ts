@@ -1,7 +1,7 @@
 import { getCookies } from "@std/http/cookie";
 import { define } from "../utils/core.ts";
 import { parseToken, TokenType } from "../utils/session.ts";
-import { fetchUser } from "../utils/user.ts";
+import { fetchUser } from "../utils/user_new.ts";
 
 export const handler = define.middleware(async function (ctx) {
 	ctx.state.user = null;

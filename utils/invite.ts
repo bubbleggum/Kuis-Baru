@@ -1,5 +1,5 @@
 import { Invite } from "../schemas/classroom_new.ts";
-import { pool } from "./core.ts";
+import { sql } from "./core.ts";
 import { customAlphabet } from "@sitnik/nanoid";
 
 const inviteFn = customAlphabet(
@@ -7,13 +7,12 @@ const inviteFn = customAlphabet(
 );
 
 export async function initInviteTable() {
-	using sql = await pool.connect();
-	await sql.queryObject`
+	await sql.query(`
     create table if not exists invites (
     classroom_id bigint references classrooms(id) unique,
     code text unique primary key
     );
-    `;
+    `);
 }
 
 export async function createInvite(classroomId: bigint) {
@@ -21,14 +20,12 @@ export async function createInvite(classroomId: bigint) {
 	let success = false;
 	let retries = 0;
 
-	using sql = await pool.connect();
-
 	do {
 		try {
-			const { rows } = await sql.queryObject<Invite>(
+			const rows = await sql.query(
 				`insert into invites (classroom_id, code) values ($1, $2) on conflict (classroom_id) do update set code = excluded.code returning *`,
 				[classroomId, inviteFn(codeSize++)],
-			);
+			) as Invite[];
 			success = true;
 			return rows.at(0)!.code;
 		} catch (_error) {
@@ -42,20 +39,18 @@ export async function createInvite(classroomId: bigint) {
 }
 
 export async function fetchClassroomByInvite(code: string) {
-	using sql = await pool.connect();
-	const { rows } = await sql.queryObject<{ classroom_id: bigint }>(
+	const rows = await sql.query(
 		`select classroom_id from invites where code = $1`,
 		[code],
-	);
+	) as Array<{ classroom_id: bigint }>;
 	return rows.at(0)?.classroom_id ?? null;
 }
 
 export async function fetchInvite(classroomId: bigint) {
-	using sql = await pool.connect();
-	const { rows } = await sql.queryObject<Invite>(
+	const rows = await sql.query(
 		`select code from invites where classroom_id = $1`,
 		[classroomId],
-	);
+	) as Invite[];
 	return rows.at(0)?.code ?? null;
 }
 

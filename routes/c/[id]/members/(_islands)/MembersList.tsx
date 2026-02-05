@@ -5,10 +5,11 @@ import { APISearchMembersResult } from "../../../../api/classrooms/[classroomId]
 import { InviteIsland } from "./InviteIsland.tsx";
 
 export function MembersList(
-	{ classroomId, initialMembers, inviteCode }: {
+	{ classroomId, initialMembers, inviteCode, isHomeroom }: {
 		classroomId: bigint;
 		initialMembers: Member[];
 		inviteCode: string | null;
+		isHomeroom: boolean;
 	},
 ) {
 	const [members, setMembers] = useState(initialMembers);
@@ -140,10 +141,12 @@ export function MembersList(
 						)}
 				</form>
 				<div class="flex gap-2">
-					<InviteIsland
-						classroomId={classroomId}
-						inviteCode={inviteCode}
-					/>
+					{isHomeroom && (
+						<InviteIsland
+							classroomId={classroomId}
+							inviteCode={inviteCode}
+						/>
+					)}
 				</div>
 			</div>
 		</div>
